@@ -1,45 +1,62 @@
-# vue-kavia
+# Online Test Platform (Vue + Vite)
 
-This template should help get you started developing with Vue 3 in Vite.
+Modern, role-based frontend for candidates, admins, HR, and employees. Includes mockable API, WebSocket chat/monitoring, test-taking UX with anti-cheat utilities, and Ocean Professional theme.
 
-## Recommended IDE Setup
+## Features
+- Role-based layouts and routes (candidate, admin, hr, employee)
+- Test taking: MCQ, theory, simple code editor; timer, palette, controls, fullscreen, anti-cheat, proctoring banner
+- Real-time chat/monitoring via WebSocket client
+- Pinia stores for auth, user, tests, admin, hr, employee, chat
+- Axios HTTP wrapper and optional mock mode using VITE_USE_MOCKS
+- Ocean Professional theme (blue & amber accents)
 
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
+## Getting Started
+1) Install dependencies
+   npm install
 
-## Type Support for `.vue` Imports in TS
+2) Configure environment
+   Copy `.env.example` to `.env` and adjust values.
+   - VITE_API_BASE_URL: Backend REST base URL
+   - VITE_WS_URL: WebSocket base URL
+   - VITE_USE_MOCKS: true|false to toggle axios mocks
+   - VITE_APP_NAME: App display name
 
-TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) to make the TypeScript language service aware of `.vue` types.
+3) Run dev server
+   npm run dev
 
-## Customize configuration
+4) Build
+   npm run build
 
-See [Vite Configuration Reference](https://vite.dev/config/).
+## Mock Mode
+Set VITE_USE_MOCKS=true to intercept all axios requests and return canned responses from:
+- src/api/mocks/auth.ts
+- src/api/mocks/candidate.ts
+- src/api/mocks/management.ts
 
-## Project Setup
+WebSocket client also switches to echo/mock loopback when mocks are enabled.
 
-```sh
-npm install
-```
+## Structure Overview
+- src/assets: base.css, theme.css (Ocean Professional theme), main.css
+- src/api: http.ts (axios), endpoints.ts, ws.ts, mocks/
+- src/layouts: DefaultLayout.vue, DashboardLayout.vue
+- src/components/common: Sidebar, Topbar, Breadcrumbs, DataTable, Modal, FileUploader, AvatarUploader, Timer, FullScreenGuard, ProctoringBanner, ChatPanel, NotificationBell
+- src/components/test: MCQQuestion, TheoryQuestion, CodeEditorQuestion, QuestionPalette, TestControls
+- src/stores: auth, user, tests, admin, hr, employee, chat
+- src/views/auth: Login, Register, ForgotPassword
+- src/views/candidate: Dashboard, TestCatalog, TestInstructions, TestRunner, TestSummary, Profile, ResumeUpload, Questionnaire, InterviewDetails
+- src/views/admin: Dashboard, QuestionBank, Users, Reports, TestTemplates, BackupRestore
+- src/views/hr: Dashboard, TestSetup, CandidateImport, Monitoring, AdjustTime, Reappear, RecordingManager, Results, Assignments
+- src/views/employee: Dashboard, Reviews, Interviews, Chat
+- src/views/realtime: MonitorRoom, ChatRoom
+- src/utils: guards, fullscreen, antiCheat, time, validators
+- src/types: models, api
 
-### Compile and Hot-Reload for Development
+## Routes
+Key entry routes:
+- / -> Login (public)
+- /candidate/*, /admin/*, /hr/*, /employee/* -> DashboardLayout with role guard
+- /realtime/* -> role-based access for admin/hr/employee
 
-```sh
-npm run dev
-```
-
-### Type-Check, Compile and Minify for Production
-
-```sh
-npm run build
-```
-
-### Run Unit Tests with [Vitest](https://vitest.dev/)
-
-```sh
-npm run test:unit
-```
-
-### Lint with [ESLint](https://eslint.org/)
-
-```sh
-npm run lint
-```
+## Notes
+- This frontend assumes a separate backend. Use mock mode for local development without backend.
+- Anti-cheat utilities provide basic protections (no copy/paste, tab switching warnings) and are meant as a foundation.
