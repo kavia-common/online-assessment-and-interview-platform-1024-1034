@@ -31,6 +31,11 @@ const current = computed(() => questions.value[idx.value])
 type AnswerValue = string
 const answers = ref<Record<string, AnswerValue>>({})
 
+function goTo(id: string) {
+  const i = questions.value.findIndex((q) => q.id === id)
+  if (i >= 0) idx.value = i
+}
+
 function onAnswer(id: string, value: AnswerValue) {
   answers.value[id] = value
 }
@@ -67,7 +72,12 @@ onBeforeUnmount(() => {
       <TestControls @prev="prev" @next="next" @submit="submit" />
     </div>
     <div style="display:grid; gap:.75rem;">
-      <QuestionPalette :questions="questions" :current-id="current.id" :answers="answers" @go="(id:string)=>{ idx = questions.findIndex(q=>q.id===id) }" />
+      <QuestionPalette
+        :questions="questions"
+        :current-id="current.id"
+        :answers="answers"
+        @go="goTo"
+      />
       <div class="card" style="padding:.75rem;">
         <strong>Legend:</strong>
         <div class="text-muted">Blue = current, Light blue = answered</div>

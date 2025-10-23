@@ -46,7 +46,7 @@ export class WSClient {
       this.ws.onclose = () => this.emit('close', {})
       // Ensure no unused parameter is declared here to satisfy ESLint
       this.ws.onerror = () => this.emit('error', {})
-    } catch (_err) {
+    } catch {
       // Fallback to mock behavior if browser blocks or URL invalid
       this.mock = true
       setTimeout(() => {
