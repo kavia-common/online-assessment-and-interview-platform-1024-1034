@@ -3,8 +3,11 @@ import { useAuthStore } from '@/stores/auth'
 
 /**
  * Axios HTTP client wrapper with auth token injection and error handling.
+ * - Base URL comes from VITE_API_BASE_URL (falling back to '/api' for local proxy setups)
+ * - Request interceptor injects Authorization: Bearer <token> when available
+ * - Response interceptor logs out on 401 to reset state
  */
-const baseURL = import.meta.env.VITE_API_BASE_URL || '/api'
+const baseURL = (import.meta.env.VITE_API_BASE_URL as string) || '/api'
 export const http: AxiosInstance = axios.create({
   baseURL,
   withCredentials: false,

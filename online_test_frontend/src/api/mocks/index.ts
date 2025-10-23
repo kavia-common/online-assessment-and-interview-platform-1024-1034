@@ -7,7 +7,7 @@ import { mockAdminHrEmployee } from './management'
 type MockTuple = [status: number, data: unknown]
 type MockHandler = (config: InternalAxiosRequestConfig) => MockTuple | null
 
-const wrapHandlers = (handlers: Array<(c: InternalAxiosRequestConfig) => [number, unknown] | null>): MockHandler[] =>
+const wrapHandlers = (handlers: Array<(c: InternalAxiosRequestConfig) => MockTuple | null>): MockHandler[] =>
   handlers.map((h) => (c: InternalAxiosRequestConfig) => {
     const res = h(c)
     if (!res) return null
@@ -17,7 +17,11 @@ const wrapHandlers = (handlers: Array<(c: InternalAxiosRequestConfig) => [number
     return [status, data]
   })
 
-const handlers: MockHandler[] = wrapHandlers([mockAuth as any, mockCandidate as any, mockAdminHrEmployee as any])
+const handlers: MockHandler[] = wrapHandlers([
+  mockAuth as (c: InternalAxiosRequestConfig) => MockTuple | null,
+  mockCandidate as (c: InternalAxiosRequestConfig) => MockTuple | null,
+  mockAdminHrEmployee as (c: InternalAxiosRequestConfig) => MockTuple | null,
+])
 
 let enabled = false
 

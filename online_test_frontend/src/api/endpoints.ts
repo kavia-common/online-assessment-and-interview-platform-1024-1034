@@ -1,3 +1,11 @@
+/**
+ * Centralized REST and WebSocket endpoint map.
+ * Uses environment variables:
+ * - VITE_API_BASE_URL for REST base (consumed by axios instance in http.ts)
+ * - VITE_WS_URL for WebSocket base (consumed here)
+ */
+const WS_BASE = (import.meta.env.VITE_WS_URL as string) || 'ws://localhost:1234'
+
 export const Endpoints = {
   auth: {
     login: '/auth/login',
@@ -43,7 +51,7 @@ export const Endpoints = {
     chat: '/employee/chat',
   },
   ws: {
-    base: import.meta.env.VITE_WS_URL || 'ws://localhost:1234',
-    room: (roomId: string) => `${import.meta.env.VITE_WS_URL || 'ws://localhost:1234'}/room/${roomId}`,
+    base: WS_BASE,
+    room: (roomId: string) => `${WS_BASE}/room/${roomId}`,
   },
 }
